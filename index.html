@@ -1,1 +1,38 @@
-
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALLCAR MOTORS — поиск марки</title>
+<style>
+*{box-sizing:border-box}body{font:16px system-ui,sans-serif;margin:0;padding:20px;background:#f3f5f7;color:#17202a}
+main{max-width:560px;margin:auto}input{width:100%;padding:15px;font-size:20px;border:1px solid #aab4c0;border-radius:12px}
+#count{margin:14px 2px;color:#526170}#results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+button{padding:13px 8px;border:1px solid #d2d9e0;border-radius:10px;background:white;font-size:16px;text-align:left;overflow-wrap:anywhere}
+#chosen{margin-top:18px;font-weight:600}.hint{font-size:13px;color:#526170}
+</style>
+</head>
+<body><main>
+<h2>🚘 Выберите марку автомобиля</h2>
+<p>Начните вводить название — варианты обновляются автоматически, без отправки сообщения.</p>
+<input id="query" placeholder="Например: B → BM → BMW" autocomplete="off" autofocus>
+<div id="count" aria-live="polite"></div><div id="results"></div><div id="chosen" aria-live="polite"></div>
+<p class="hint">Тестовая страница. Передача выбранной марки в MAX-бот будет подключена отдельно.</p>
+</main>
+<script>
+const makes = ["AC","Acura","Alfa Romeo","Alpine","Arcfox","Ariel","Aro","Artega","Aston Martin","Audi","Aurus","BAIC","BMW","BYD","Bentley","Bestune","Borgward","Brilliance","Bristol","Bufori","Bugatti","Buick","Cadillac","Caterham","Changan","Chery","Chevrolet","Chrysler","Citroën","Cupra","DMC","DR","DS","Dacia","Daewoo","Daihatsu","Datsun","Dodge","Dongfeng","Donkervoort","Eagle","El Nasr","FSO","Ferrari","Fiat","Fisker","Ford","Foton","GAC","GAZ","GMC","GTA","Geely","Genesis","Gordon Murray Automotive","Great Wall","Haval","Hindustan","Holden","Honda","Hongqi","Hummer","Hyundai","Ineos","Infiniti","Iran Khodro","Isuzu","JAC","Jaguar","Jeep","Jetour","KGM","KTM","Karma","Kia","Koenigsegg","Lada","Lamborghini","Lancia","Land Rover","Leapmotor","Lexus","Li Auto","Lightyear","Lincoln","Lotus","Lucid","Lynk & Co","MG","MINI","Mahindra","Marussia","Maruti Suzuki","Maserati","Maybach","Mazda","McLaren","Mercedes-AMG","Mercedes-Benz","Mercury","Mitsubishi","Morgan","Moskvitch","NIO","Nissan","Oldsmobile","Omoda","Opel","Ora","Pagani","Panoz","Perodua","Peugeot","Pininfarina","Plymouth","Polestar","Pontiac","Porsche","Proton","Qoros","Ram","Renault","Rimac","Rivian","Rolls-Royce","Rover","SEAT","Saab","Saipa","Saleen","Samsung","Santana","Saturn","Scion","Scout","Smart","Speranza","Spyker","SsangYong","Subaru","Suzuki","TVR","Tank","Tata","Tesla","Togg","Toyota","Trabant","UAZ","Vauxhall","VinFast","Volkswagen","Volvo","Wartburg","Wiesmann","Wuling","XPeng","Xiaomi","Yugo","Zastava","Zeekr","Zender","Zenvo","Škoda"];
+const query=document.getElementById("query"), results=document.getElementById("results"), count=document.getElementById("count"), chosen=document.getElementById("chosen");
+function render(){
+ const q=query.value.trim().toLocaleLowerCase("ru");
+ const found=makes.filter(m=>m.toLocaleLowerCase("ru").includes(q));
+ count.textContent=q?`Найдено марок: ${found.length}`:`Все марки: ${found.length}. Начните вводить название.`;
+ results.replaceChildren();
+ found.slice(0,60).forEach(make=>{
+  const b=document.createElement("button"); b.type="button"; b.textContent=make;
+  b.addEventListener("click",()=>{chosen.textContent="Выбрана марка: "+make;query.value=make;render();});
+  results.appendChild(b);
+ });
+ if(found.length>60) count.textContent+=". Показаны первые 60 — уточните поиск.";
+}
+query.addEventListener("input",render);render();
+</script></body></html>
